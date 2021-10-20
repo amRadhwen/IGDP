@@ -6,6 +6,13 @@ import platform
 import instaloader
 from colorama import Fore, Back, Style
 
+def getStringInput(message):
+    try:
+        return input(message)
+    except KeyboardInterrupt as ki:
+        exit()
+        print("\nBye !")
+
 
 system = platform.system()
 version = platform.version()
@@ -14,27 +21,31 @@ platforme = platform.platform()
 processor = platform.processor()
 
 print("====================================================================")
-print("______......--------======$$$$$$ " + Back.BLUE+ Fore.WHITE +"IGDP" + Style.RESET_ALL +" $$$$$$======------......______")
+print("______......--------======$$$$$$ IGDP $$$$$$======------......______")
 print("====================================================================")
 
-try:
-    username = input("\nUsername: ")
-except KeyboardInterrupt as ki:
-    exit()
-    print("\nBye !")
 
+username = getStringInput("Username: ")
 while not username:
-    username = input("Username: ")
-
+    username = getStringInput("Username: ")
 
 loader = instaloader.Instaloader()
 
 try:
-    print("--> Searching...")
+    print("Searching...")
     profile = instaloader.Profile.from_username(loader.context, username)
-
+    
+    #check if profile is private
     if profile.is_private:
-        pass
+        print("Account is Private !")
+        print(Back.MAGENTA + "Login: " + Style.RESET_ALL)
+        USER = getStringInput("USER: ")
+        PASS = getStringInput("PASS: ")
+        print("Connecting...")
+        try:
+            loader.login(USER, PASS)
+        except Exception as e:
+            print(Fore.RED + str(e) + Style.RESET_ALL)
     
     # profile informations
     else:
