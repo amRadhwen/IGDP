@@ -3,7 +3,6 @@
 # so this will be the next correction
 from sys import exit
 import platform
-from typing import _promote
 import instaloader
 from colorama import Fore, Back, Style
 
