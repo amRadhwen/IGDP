@@ -3,6 +3,7 @@
 # so this will be the next correction
 from sys import exit
 import platform
+from typing import _promote
 import instaloader
 from colorama import Fore, Back, Style
 
@@ -33,25 +34,26 @@ try:
     print("--> Searching...")
     profile = instaloader.Profile.from_username(loader.context, username)
 
-    print(profile.is_private)
+    if profile.is_private:
+        pass
     
     # profile informations
-    '''
-    print("\nFull name    : ", profile.full_name)
-    print("User ID      : ", profile.userid)
-    print("Followees    : ", profile.followees)
-    print("Followers    : ", profile.followers)
-    print("Biography    : ", end=" ")
-    for i in profile.biography:
-        if ord(i) == 10:
-            print(" ", end="")
-        else:
-            print(i, end="")
-    print("\n")
+    else:
+        print("\nFull name    : ", profile.full_name)
+        print("User ID      : ", profile.userid)
+        print("Followees    : ", profile.followees)
+        print("Followers    : ", profile.followers)
+        print("Biography    : ", end=" ")
+        for i in profile.biography:
+            if ord(i) == 10:
+                print(" ", end="")
+            else:
+                print(i, end="")
+        print("\n")
 
-    print("\->Downloading Posts...")
-    for post in profile.get_posts():
-        loader.download_post(post, target=profile.username)'''
+        print("\->Downloading Posts...")
+        for post in profile.get_posts():
+            loader.download_post(post, target=profile.username)
     print(Fore.GREEN + "->Done " + Style.RESET_ALL)
 except Exception as e:
     print(Fore.RED + "!!! " +str(e) + Style.RESET_ALL)
