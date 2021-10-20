@@ -1,3 +1,6 @@
+# before all instaloader module contains profile visibility check
+# means so you don't need to get profile visibility input form users in the beginngin of the script
+# so this will be the next correction
 import sys
 import platform
 import instaloader
@@ -74,7 +77,25 @@ if not username:
     sys.exit()
 else:
     try:
+        print("--> Searching...")
         profile = instaloader.Profile.from_username(loader.context, username)
+        # profile informations
+        print("\nFull name    : ", profile.full_name)
+        print("User ID      : ", profile.userid)
+        print("Followees    : ", profile.followees)
+        print("Followers    : ", profile.followers)
+        print("Biography    : ", end=" ")
+        for i in profile.biography:
+            if ord(i) == 10:
+                print(" ", end="")
+            else:
+                print(i, end="")
+        print("\n")
+
+        print("\->Downloading Posts...")
+        for post in profile.get_posts():
+            loader.download_post(post, target=profile.username)
+        print(Fore.GREEN + "->Done " + Style.RESET_ALL)
     except Exception as e:
         print(Fore.RED + "!!! " +str(e) + Style.RESET_ALL)
 
