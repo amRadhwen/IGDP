@@ -5,6 +5,7 @@ from colorama import Fore, Back, Style
 from __loader import Loader
 from getpass import getpass
 
+
 def getStringInput(message):
     try:
         _input = input(message)
@@ -14,6 +15,7 @@ def getStringInput(message):
     except KeyboardInterrupt as ki:
         print("\nBye !")
         exit()
+
 
 def getStringinputHidden(message):
     try:
@@ -26,10 +28,12 @@ def getStringinputHidden(message):
         print("\nBye !")
         exit()
 
+
 def loading(message):
     with Loader(message):
         for i in range(10):
             sleep(0.25)
+
 
 print("=======================================================================")
 print("______......--------======$$$$$$ IGDP V1 $$$$$$======------......______")
@@ -43,7 +47,6 @@ while not found:
 
     loader = instaloader.Instaloader(save_metadata=False)
 
-
     try:
         loading("Searching...")
         print("Found :)")
@@ -51,7 +54,7 @@ while not found:
         found = True
         connected = False
 
-        #check if profile is private
+        # check if profile is private
         if profile.is_private:
             print("Account is Private !")
             print(Back.MAGENTA + "Login: " + Style.RESET_ALL)
@@ -64,7 +67,7 @@ while not found:
                 connected = True
             except Exception as e:
                 print(Fore.RED + str(e) + Style.RESET_ALL)
-        
+
         # profile informations
         if not profile.is_private or (profile.is_private and connected):
             print("\nFull name    : ", profile.full_name)
@@ -84,8 +87,4 @@ while not found:
                 loader.download_post(post, target=profile.username)
             print(Fore.GREEN + "->Done " + Style.RESET_ALL)
     except Exception as e:
-        print(Fore.RED + str(e) + "!!!" +Style.RESET_ALL)
-
-
-
-
+        print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)
