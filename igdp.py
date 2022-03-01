@@ -56,7 +56,8 @@ while not found:
             loader.load_session_from_file(username="", filename="session")
             session = True
         except Exception as e:
-            print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)    
+            print(Fore.RED + "Cannot load session !" + Style.RESET_ALL)
+            #print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)
 
     username = getStringInput("Instagram Username: ")
     while not username:
@@ -80,6 +81,7 @@ while not found:
                     loader.login(USER, PASS)
                     print("Connected :)")
                     loader.save_session_to_file("session")
+                    loader.load_session_from_file(username="", session="session")
                     connected = True
                 except Exception as e:
                     print(Fore.RED + str(e) + Style.RESET_ALL)
