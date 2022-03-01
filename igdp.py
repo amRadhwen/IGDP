@@ -15,8 +15,7 @@ def getStringInput(message):
     except KeyboardInterrupt as ki:
         print("\nBye !")
         exit()
-
-
+# get string hidden (password)
 def getStringinputHidden(message):
     try:
         print(message, end="")
@@ -24,6 +23,7 @@ def getStringinputHidden(message):
         while not _inputHidden:
             print(message, end="")
             _inputHidden = getpass()
+        return _inputHidden
     except KeyboardInterrupt as ki:
         print("\nBye !")
         exit()
@@ -82,9 +82,14 @@ while not found:
                 else:
                     print(i, end="")
 
+            # download posts
             print("\n->Downloading Posts...")
-            for post in profile.get_posts():
-                loader.download_post(post, target=profile.username)
-            print(Fore.GREEN + "->Done " + Style.RESET_ALL)
+            try:
+                for post in profile.get_posts():
+                    print("here")
+                    print(loader.download_post(post, target=profile.username))
+                print(Fore.GREEN + "->Done " + Style.RESET_ALL)
+            except KeyboardInterrupt:
+                print("Interrupted !")
     except Exception as e:
         print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)
