@@ -51,14 +51,7 @@ found = False
 connected = False
 session = False
 while not found:
-    if not session:
-        try:
-            loader.load_session_from_file(username="", filename="session")
-            session = True
-        except Exception as e:
-            print(Fore.RED + "Cannot load session !" + Style.RESET_ALL)
-            #print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)
-
+            
     username = getStringInput("Instagram Username: ")
     while not username:
         username = getStringInput("Instagram Username: ")
@@ -71,6 +64,14 @@ while not found:
 
         # check if profile is private (if yes login)
         if profile.is_private:
+            try:
+                loader.load_session_from_file(username="", filename="session")
+                session = True
+                connected = True
+            except Exception as e:
+                print(Fore.RED + "Cannot load session !" + Style.RESET_ALL)
+                #print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)
+
             if not session:
                 print("Account is Private !")
                 print(Back.MAGENTA + "Login: " + Style.RESET_ALL)
@@ -81,12 +82,9 @@ while not found:
                     loader.login(USER, PASS)
                     print("Connected :)")
                     loader.save_session_to_file("session")
-                    loader.load_session_from_file(username="", session="session")
                     connected = True
                 except Exception as e:
                     print(Fore.RED + str(e) + Style.RESET_ALL)
-            else:
-                connected = True
         
 
         # profile informations
@@ -107,11 +105,11 @@ while not found:
             print("\n->Downloading Posts...")
             try:
                 for post in profile.get_posts():
-                    print("here")
-                    print(loader.download_post(post, target=profile.username))
+                    print("inside downloader")
+                    loader.download_post(post, target=profile.username)
                 print(Fore.GREEN + "->Done " + Style.RESET_ALL)
             except KeyboardInterrupt:
-                print("Interrupted !")
+                print("Download Interrupted !")
     except ProfileNotExistsException:
         print(Fore.RED + "Username " + username + " does not exists !" + Style.RESET_ALL);
     except Exception as e:
