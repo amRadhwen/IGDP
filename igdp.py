@@ -1,11 +1,14 @@
+# imports 
 from time import sleep
 from sys import exit
 import instaloader
 from colorama import Fore, Back, Style
+from instaloader.exceptions import ProfileNotExistsException
 from __loader import Loader
 from getpass import getpass
 
 
+# get string input
 def getStringInput(message):
     try:
         _input = input(message)
@@ -15,7 +18,9 @@ def getStringInput(message):
     except KeyboardInterrupt as ki:
         print("\nBye !")
         exit()
-# get string hidden (password)
+
+
+# get hidden string (password)
 def getStringinputHidden(message):
     try:
         print(message, end="")
@@ -28,45 +33,59 @@ def getStringinputHidden(message):
         print("\nBye !")
         exit()
 
-
+# start the loading thread
 def loading(message):
     with Loader(message):
         for i in range(10):
             sleep(0.25)
 
 
+# main screen header
 print("=======================================================================")
-print("______......--------======$$$$$$ IGDP V1 $$$$$$======------......______")
+print("______......--------======****** IGDP V1 ******======------......______")
 print("=======================================================================")
 
+
+loader = instaloader.Instaloader(save_metadata=False)
 found = False
+connected = False
+session = False
 while not found:
+    if not session:
+        try:
+            loader.load_session_from_file(username="", filename="session")
+            session = True
+        except Exception as e:
+            print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)    
+
     username = getStringInput("Instagram Username: ")
     while not username:
         username = getStringInput("Instagram Username: ")
 
-    loader = instaloader.Instaloader(save_metadata=False)
-
     try:
         loading("Searching...")
-        print("Found :)")
         profile = instaloader.Profile.from_username(loader.context, username)
+        print("Found :)")
         found = True
-        connected = False
 
-        # check if profile is private
+        # check if profile is private (if yes login)
         if profile.is_private:
-            print("Account is Private !")
-            print(Back.MAGENTA + "Login: " + Style.RESET_ALL)
-            USER = getStringInput("USER: ")
-            PASS = getStringinputHidden("PASS: ")
-            try:
-                loading("Connecting...")
-                loader.login(USER, PASS)
-                print("Connected :)")
+            if not session:
+                print("Account is Private !")
+                print(Back.MAGENTA + "Login: " + Style.RESET_ALL)
+                USER = getStringInput("USER: ")
+                PASS = getStringinputHidden("PASS: ")
+                try:
+                    loading("Connecting...")
+                    loader.login(USER, PASS)
+                    print("Connected :)")
+                    loader.save_session_to_file("session")
+                    connected = True
+                except Exception as e:
+                    print(Fore.RED + str(e) + Style.RESET_ALL)
+            else:
                 connected = True
-            except Exception as e:
-                print(Fore.RED + str(e) + Style.RESET_ALL)
+        
 
         # profile informations
         if not profile.is_private or (profile.is_private and connected):
@@ -91,5 +110,7 @@ while not found:
                 print(Fore.GREEN + "->Done " + Style.RESET_ALL)
             except KeyboardInterrupt:
                 print("Interrupted !")
+    except ProfileNotExistsException:
+        print(Fore.RED + "Username " + username + " does not exists !" + Style.RESET_ALL);
     except Exception as e:
         print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)
