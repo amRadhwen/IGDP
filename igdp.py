@@ -6,6 +6,7 @@ from colorama import Fore, Back, Style
 from instaloader.exceptions import ProfileNotExistsException
 from __loader import Loader
 from getpass import getpass
+import asyncio
 
 
 # get string input
@@ -39,6 +40,33 @@ def loading(message):
         for i in range(10):
             sleep(0.25)
 
+def login():
+    global connected
+    print("Account is Private !")
+    print(Back.MAGENTA + "Login: " + Style.RESET_ALL)
+    USER = getStringInput("USER: ")
+    PASS = getStringinputHidden("PASS: ")
+    try:
+        loading("Connecting...")
+        loader.login(USER, PASS)
+        print("Connected :)")
+        loader.save_session_to_file("session")
+        connected = True
+    except Exception as e:
+        print(Fore.RED + str(e) + Style.RESET_ALL)
+
+def load_session(username, filename):
+    global session 
+    global connected
+    try:
+        loader.load_session_from_file(username=username, filename=filename)
+        session = True
+        connected = True
+    except Exception as e:
+        print(Fore.RED + "Cannot load session !" + Style.RESET_ALL)
+        #print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)
+
+
 
 # main screen header
 print("=======================================================================")
@@ -51,6 +79,8 @@ found = False
 connected = False
 session = False
 while not found:
+
+    load_session("", "session")
             
     username = getStringInput("Instagram Username: ")
     while not username:
@@ -64,27 +94,8 @@ while not found:
 
         # check if profile is private (if yes login)
         if profile.is_private:
-            try:
-                loader.load_session_from_file(username="", filename="session")
-                session = True
-                connected = True
-            except Exception as e:
-                print(Fore.RED + "Cannot load session !" + Style.RESET_ALL)
-                #print(Fore.RED + str(e) + "!!!" + Style.RESET_ALL)
-
             if not session:
-                print("Account is Private !")
-                print(Back.MAGENTA + "Login: " + Style.RESET_ALL)
-                USER = getStringInput("USER: ")
-                PASS = getStringinputHidden("PASS: ")
-                try:
-                    loading("Connecting...")
-                    loader.login(USER, PASS)
-                    print("Connected :)")
-                    loader.save_session_to_file("session")
-                    connected = True
-                except Exception as e:
-                    print(Fore.RED + str(e) + Style.RESET_ALL)
+                asyncio.run(login())
         
 
         # profile informations
